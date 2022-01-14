@@ -15,10 +15,16 @@ public class HeroController : BaseCharacterController
     // Update is called once per frame
     void Update()
     {
+        onFallCheck();
+        if (Input.GetKey(KeyCode.W))
+        {
+            Up();
+        }
         if (Input.GetKey(KeyCode.D))
         {
             Move(1);
         }
+
         if (Input.GetKeyUp(KeyCode.D)){
             StopMoving();
         }
@@ -27,9 +33,24 @@ public class HeroController : BaseCharacterController
         {
             Move(-1);
         }
+
         if (Input.GetKeyUp(KeyCode.A))
         {
             StopMoving();
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (onFight)
+            {
+                SetToWalk();
+            }
+            else
+            {
+                SetToFight();
+            }
+
+        }
+
     }
 }

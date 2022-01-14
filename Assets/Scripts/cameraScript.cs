@@ -5,8 +5,13 @@ using UnityEngine;
 public class cameraScript : MonoBehaviour
 {
     [SerializeField] private GameObject hero;
-    [SerializeField] private float camSpeed = 0.05f;
+    [SerializeField] private float camSpeed = 70f;
     [SerializeField] private float rangeDistance = 5f;
+    [SerializeField] private float walkFieldOfView = 50;
+    [SerializeField] private float camHeightOnWalk = -2.4f;
+    [SerializeField] private float fightFieldOfView = 100f;
+    [SerializeField] private float camHeightOnFight = 4;
+    private Camera cam;
     private Transform body;
     private Rigidbody2D rb;
     private HeroController hc;
@@ -15,13 +20,13 @@ public class cameraScript : MonoBehaviour
 
     private void Start() 
     {
+        cam = GetComponent<Camera>();
         body = hero.GetComponent<Transform>();
         rb = hero.GetComponent<Rigidbody2D>();
         hc = hero.GetComponent<HeroController>();
     }
     private void Update() 
     {
-        //transform.position = new Vector3 (body.position.x, transform.position.y, transform.position.z);
 
         if (transform.position.x > body.position.x && transform.position.x - body.position.x > rangeDistance)
         {
@@ -43,6 +48,19 @@ public class cameraScript : MonoBehaviour
         {
             delta = (transform.position.x - body.position.x)/camSpeed;
             transform.position = new Vector3(transform.position.x - delta, transform.position.y, transform.position.z);
+        }
+
+        if (hc.onFight)
+        {
+            transform.position = new Vector3 (transform.position.x, camHeightOnFight, transform.position.z);
+            cam.fieldOfView = fightFieldOfView;
+
+        } 
+
+        else 
+        {
+            transform.position = new Vector3 (transform.position.x, camHeightOnWalk, transform.position.z);
+            cam.fieldOfView = walkFieldOfView;
         }
     }
 }
