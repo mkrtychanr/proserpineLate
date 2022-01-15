@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Floor
   - FallZone
+  - Weapon0
+  - Weapon1
+  - Weapon2
+  - Weapon3
   layers:
   - Default
   - TransparentFX

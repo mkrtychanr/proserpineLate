@@ -15,7 +15,7 @@ public class BaseCharacterStatus : MonoBehaviour
     [SerializeField] public int health;
 
     //уровень оружия
-    [SerializeField] public int weaponLevel;
+    [SerializeField] public int weaponLevel = 0;
 
     //находимся ли мы в движении по Х
     [SerializeField] public bool isMoving = false;
@@ -31,4 +31,11 @@ public class BaseCharacterStatus : MonoBehaviour
 
     //находимся ли мы в состоянии падения
     [SerializeField] public bool isFalling = false;
+
+    [SerializeField] public int selectedWeapon = 0;
+
+    //состояние всех орудий. true – готово стрелять. false – выполняется перезарядка
+    private bool[] weaponStatus = {true, true, true, true};
+
+    
 }

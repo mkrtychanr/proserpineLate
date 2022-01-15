@@ -27,7 +27,7 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected GameObject objSprite;
     [SerializeField] protected SpriteRenderer sprite;
-    protected HeroStatus stats;
+    protected BaseCharacterStatus stats;
 
     //скорость при передвижении по Х
     private float xVelocity;
@@ -115,9 +115,10 @@ public class BaseCharacterController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpYSpeed);
         }
     }
-
+    //метод двойного прыжка
     protected void DoubleJump()
-    {
+    {   
+        //если персонаж находится в прыжке
         if (stats.inJump && !stats.inDoubleJump)
         {
             Debug.Log("JustDoubleJump");
@@ -172,6 +173,7 @@ public class BaseCharacterController : MonoBehaviour
         anim.SetTrigger("die");
     }
 
+    //метод стрельбы
     protected void Shoot()
     {
         if (stats.onFight)
@@ -179,7 +181,14 @@ public class BaseCharacterController : MonoBehaviour
             Debug.Log("Выстрел");
         }
     }
-
-
+    //метод смены оружия
+    protected void SelectWeapon(int weapon)
+    {
+        if (weapon <= stats.weaponLevel)
+        {
+            stats.selectedWeapon = weapon;
+            Debug.Log("Weapon "+ weapon +" is selected");
+        }
+    }
 
 }
