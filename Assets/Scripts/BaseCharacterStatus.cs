@@ -5,6 +5,12 @@ using UnityEngine;
 public class BaseCharacterStatus : MonoBehaviour
 {
 
+    //максимальное количество жизней в игре
+    [SerializeField] public int healthMax;
+
+    //максимальное количество жизней на данных момент игры
+    [SerializeField] public int healthCurrent;
+    
     //жизни персонажа
     [SerializeField] public int health;
 
