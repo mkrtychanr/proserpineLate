@@ -16,7 +16,11 @@ public class HeroController : BaseCharacterController
     void Update()
     {
         onFallCheck();
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && inJump)
+        {
+            DoubleJump();
+        }
+        if (Input.GetKeyDown(KeyCode.W) && !inJump)
         {
             Up();
         }
@@ -50,6 +54,11 @@ public class HeroController : BaseCharacterController
                 SetToFight();
             }
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Die();
         }
 
     }

@@ -19,10 +19,11 @@ public class HeroCollisionHandler : MonoBehaviour
         if (collision.gameObject.tag == "Floor")
         {
             hero.isFalling = false;
-            hero.inAir = false;
-            hero.isJump = false;
+            hero.inJump = false;
+            hero.inDoubleJump = false;
             hero.anim.SetBool("isFalling", hero.isFalling);
-            hero.anim.SetBool("inAir", hero.inAir);
+            hero.anim.SetBool("inJump", hero.inJump);
+            hero.anim.SetBool("inDoubleJump", hero.inDoubleJump);
         }
     }
 }

@@ -12,13 +12,10 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] public bool onFight = false;
 
     //совершен ли прижок. Будет активно до того момента как персонаж не коснется земли
-    [SerializeField] public bool isJump = false;
+    [SerializeField] public bool inJump = false;
 
     //совершен ли второй прыжок
     [SerializeField] public bool inDoubleJump = false;
-
-    //при положительном ненулевом ускорении true, иначе – false
-    [SerializeField] public bool inAir = false;
 
     //находимся ли мы в состоянии падения
     [SerializeField] public bool isFalling = false;
@@ -28,6 +25,8 @@ public class BaseCharacterController : MonoBehaviour
 
     //выбранное оружие
     [SerializeField] public int selectedWeapon = 0;
+
+    //[SerializeField] public int wKeyIsDown
 
     //скорость передвижения вне боя
     [SerializeField] protected float walkSpeed = 10f;
@@ -43,6 +42,8 @@ public class BaseCharacterController : MonoBehaviour
 
     //сила прыжка
     [SerializeField] protected float jumpYSpeed = 5f;
+
+    [SerializeField] protected float doubleJumpYSpeed = 3f;
 
     //объявление компонентов Unity 
     [SerializeField] public Animator anim;
@@ -78,7 +79,7 @@ public class BaseCharacterController : MonoBehaviour
         isMoving = true;
         anim.SetBool("isMoving", isMoving);
 
-        if (inAir)
+        if (inJump || isFalling)
         {
             Debug.Log("Двигаемся в воздухе");
             xVelocity = jumpXSpeed;
@@ -109,18 +110,32 @@ public class BaseCharacterController : MonoBehaviour
 
     protected void onFallCheck()
     {
-        if (inAir && rb.velocity.y < 0) isFalling = true;
+        if (inJump && rb.velocity.y < 0) isFalling = true;
         anim.SetBool("isFalling", isFalling);
     }
 
     protected void Up()
     {
-        if (!isJump)
+        if (!inJump)
         {
-            isJump = true;
-            inAir = true;
-            anim.SetBool("inAir", inAir);
+            Debug.Log("JustUp");
+            inJump = true;
+            anim.SetBool("inJump", inJump);
             rb.velocity = new Vector2(rb.velocity.x, jumpYSpeed);
+        }
+    }
+
+    protected void DoubleJump()
+    {
+        if (inJump && !inDoubleJump)
+        {
+            Debug.Log("JustDoubleJump");
+            inDoubleJump = true;
+            isFalling = false;
+            anim.SetBool("isFalling", isFalling);
+            anim.SetBool("inDoubleJump", inDoubleJump);
+
+            rb.velocity = new Vector2(rb.velocity.x, doubleJumpYSpeed);
         }
     }
 
@@ -130,7 +145,7 @@ public class BaseCharacterController : MonoBehaviour
          //меняем статус булиевых переменных. т.к. мы перестаем двигаться. Необходимо для анимаций и внутренней обработки кода
         isMoving = false;
         anim.SetBool("isMoving", isMoving);
-        if (inAir)
+        if (inJump)
         {
             xVelocity = 0;
             yVelocity = rb.velocity.y;    
@@ -159,6 +174,11 @@ public class BaseCharacterController : MonoBehaviour
         onFight = false;
         anim.SetBool("onFight", onFight);
         anim.SetTrigger("onFightTrigger");
+    }
+
+    protected void Die()
+    {
+        anim.SetTrigger("die");
     }
 
 }
