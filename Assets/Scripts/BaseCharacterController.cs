@@ -5,29 +5,6 @@ using UnityEngine;
 public class BaseCharacterController : MonoBehaviour
 {
 
-    //находимся ли мы в движении по Х
-    [SerializeField] public bool isMoving = false;
-
-    //находимся ли мы в бою
-    [SerializeField] public bool onFight = false;
-
-    //совершен ли прижок. Будет активно до того момента как персонаж не коснется земли
-    [SerializeField] public bool inJump = false;
-
-    //совершен ли второй прыжок
-    [SerializeField] public bool inDoubleJump = false;
-
-    //находимся ли мы в состоянии падения
-    [SerializeField] public bool isFalling = false;
-
-    //уроень оружия игрока
-    [SerializeField] public int weaponLevel = 0;
-
-    //выбранное оружие
-    [SerializeField] public int selectedWeapon = 0;
-
-    //[SerializeField] public int wKeyIsDown
-
     //скорость передвижения вне боя
     [SerializeField] protected float walkSpeed = 10f;
 
@@ -38,18 +15,19 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] protected float fallSpeed = -5f;
 
     //скорость передвижения в прыжке
-    [SerializeField] protected float jumpXSpeed = 15f;
+    [SerializeField] protected float jumpXSpeed = 10f;
 
     //сила прыжка
-    [SerializeField] protected float jumpYSpeed = 5f;
+    [SerializeField] protected float jumpYSpeed = 6f;
 
-    [SerializeField] protected float doubleJumpYSpeed = 3f;
+    [SerializeField] protected float doubleJumpYSpeed = 6f;
 
     //объявление компонентов Unity 
     [SerializeField] public Animator anim;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected GameObject objSprite;
     [SerializeField] protected SpriteRenderer sprite;
+    protected HeroStatus stats;
 
     //скорость при передвижении по Х
     private float xVelocity;
@@ -60,15 +38,23 @@ public class BaseCharacterController : MonoBehaviour
     //метод поворота персонажа
     protected void Turn()
     {
-        Debug.Log(rb.velocity.x);
+
+        //если персонаж двигается ВПРАВО, то его ускорение (rb.velocity.x) ПОЛОЖИТЕЛЬНО (>0)
         if (rb.velocity.x > 0)
         {
+
+            //разворот спрайта
             sprite.flipX = false;
+
         }
+
+        //если персонаж двигается ВЛЕВО, то его ускорение (rb.velocity.x) ОТРИЦАТЕЛЬНО (<0)
         else
         {
+            //разворот спрайта
             sprite.flipX = true;
         }
+
     }
 
     //метод передвижения персонажа по X. в качестве применяемого параметра – направление. 1 – вправо. (-1) – влево
@@ -76,19 +62,25 @@ public class BaseCharacterController : MonoBehaviour
     {
 
         //меняем статус булиевых переменных. т.к. мы переходим в движение. Необходимо для анимаций и внутренней обработки кода
-        isMoving = true;
-        anim.SetBool("isMoving", isMoving);
+        stats.isMoving = true;
+        anim.SetBool("isMoving", stats.isMoving);
 
-        if (inJump || isFalling)
+        //если мы находимся в прыжке или падаем (земля из под ног ушла), то нам нужно изменить скорость передвижения
+        if (stats.inJump || stats.isFalling)
         {
-            Debug.Log("Двигаемся в воздухе");
+            
+            //скорость по Х задаем сами выше
             xVelocity = jumpXSpeed;
+
+            //а тут оставляем все на душе физики Unity
             yVelocity = rb.velocity.y;
+
         }
         else
         {
+
             //в зависимости от того в бою мы или нет – меняем скорость задаваемую при ходьбе
-            if (onFight)
+            if (stats.onFight)
             {
                 xVelocity = fightSpeed;
                 yVelocity = -12f;
@@ -98,7 +90,6 @@ public class BaseCharacterController : MonoBehaviour
                 xVelocity = walkSpeed;
                 yVelocity = -5f;
             }
-            Debug.Log("А ты думал?");
 
         }
 
@@ -110,30 +101,30 @@ public class BaseCharacterController : MonoBehaviour
 
     protected void onFallCheck()
     {
-        if (inJump && rb.velocity.y < 0) isFalling = true;
-        anim.SetBool("isFalling", isFalling);
+        if (stats.inJump && rb.velocity.y < 0) stats.isFalling = true;
+        anim.SetBool("isFalling", stats.isFalling);
     }
 
     protected void Up()
     {
-        if (!inJump)
+        if (!stats.inJump)
         {
             Debug.Log("JustUp");
-            inJump = true;
-            anim.SetBool("inJump", inJump);
+            stats.inJump = true;
+            anim.SetBool("inJump", stats.inJump);
             rb.velocity = new Vector2(rb.velocity.x, jumpYSpeed);
         }
     }
 
     protected void DoubleJump()
     {
-        if (inJump && !inDoubleJump)
+        if (stats.inJump && !stats.inDoubleJump)
         {
             Debug.Log("JustDoubleJump");
-            inDoubleJump = true;
-            isFalling = false;
-            anim.SetBool("isFalling", isFalling);
-            anim.SetBool("inDoubleJump", inDoubleJump);
+            stats.inDoubleJump = true;
+            stats.isFalling = false;
+            anim.SetBool("isFalling", stats.isFalling);
+            anim.SetBool("inDoubleJump", stats.inDoubleJump);
 
             rb.velocity = new Vector2(rb.velocity.x, doubleJumpYSpeed);
         }
@@ -143,9 +134,9 @@ public class BaseCharacterController : MonoBehaviour
     protected void StopMoving()
     {
          //меняем статус булиевых переменных. т.к. мы перестаем двигаться. Необходимо для анимаций и внутренней обработки кода
-        isMoving = false;
-        anim.SetBool("isMoving", isMoving);
-        if (inJump)
+        stats.isMoving = false;
+        anim.SetBool("isMoving", stats.isMoving);
+        if (stats.inJump)
         {
             xVelocity = 0;
             yVelocity = rb.velocity.y;    
@@ -162,8 +153,8 @@ public class BaseCharacterController : MonoBehaviour
     protected void SetToFight()
     {
         //меняем статус булиевых переменных и вызываем триггер. Необходимо для анимаций и внутренней обработки кода
-        onFight = true;
-        anim.SetBool("onFight", onFight);
+        stats.onFight = true;
+        anim.SetBool("onFight", stats.onFight);
         anim.SetTrigger("onFightTrigger");
     }
 
@@ -171,8 +162,8 @@ public class BaseCharacterController : MonoBehaviour
     protected void SetToWalk()
     {
         //меняем статус булиевых переменных и вызываем триггер. Необходимо для анимаций и внутренней обработки кода
-        onFight = false;
-        anim.SetBool("onFight", onFight);
+        stats.onFight = false;
+        anim.SetBool("onFight", stats.onFight);
         anim.SetTrigger("onFightTrigger");
     }
 
@@ -180,5 +171,15 @@ public class BaseCharacterController : MonoBehaviour
     {
         anim.SetTrigger("die");
     }
+
+    protected void Shoot()
+    {
+        if (stats.onFight)
+        {
+            Debug.Log("Выстрел");
+        }
+    }
+
+
 
 }

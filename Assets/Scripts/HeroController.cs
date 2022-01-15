@@ -7,6 +7,7 @@ public class HeroController : BaseCharacterController
     // Start is called before the first frame update
     void Start()
     {
+        stats = GetComponent<HeroStatus>();
         rb = GetComponent<Rigidbody2D>();
         anim = objSprite.GetComponent<Animator>();
         sprite = objSprite.GetComponent<SpriteRenderer>();
@@ -16,11 +17,16 @@ public class HeroController : BaseCharacterController
     void Update()
     {
         onFallCheck();
-        if (Input.GetKeyDown(KeyCode.W) && inJump)
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot();
+        }
+        if (Input.GetKeyDown(KeyCode.W) && stats.inJump)
         {
             DoubleJump();
         }
-        if (Input.GetKeyDown(KeyCode.W) && !inJump)
+        if (Input.GetKeyDown(KeyCode.W) && !stats.inJump)
         {
             Up();
         }
@@ -45,7 +51,7 @@ public class HeroController : BaseCharacterController
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (onFight)
+            if (stats.onFight)
             {
                 SetToWalk();
             }

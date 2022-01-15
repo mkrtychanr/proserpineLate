@@ -29,7 +29,7 @@ public class cameraScript : MonoBehaviour
     private Camera cam;
     private Transform body;
     private Rigidbody2D rb;
-    private HeroController hc;
+    private HeroStatus stats;
 
     //внутреняя переменная, которая помогает "доезжать" камере красиво 
     private float delta;
@@ -41,7 +41,7 @@ public class cameraScript : MonoBehaviour
         cam = GetComponent<Camera>();
         body = hero.GetComponent<Transform>();
         rb = hero.GetComponent<Rigidbody2D>();
-        hc = hero.GetComponent<HeroController>();
+        stats = hero.GetComponent<HeroStatus>();
     }
     private void Update() 
     {
@@ -85,9 +85,9 @@ public class cameraScript : MonoBehaviour
         //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        //если персонаж стоит на месте (!hc.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
+        //если персонаж стоит на месте (!stats.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
         //то игрок находится СПРАВА от камеры (в слепой зоне), следовательно будет выполняться сл.блок.
-        if (!hc.isMoving && transform.position.x < body.position.x)
+        if (!stats.isMoving && transform.position.x < body.position.x)
         {
 
             //delta – расстояние между персонажем и камерой. Делим на camSpeed, чтоб разизовать "доезжание"
@@ -96,9 +96,9 @@ public class cameraScript : MonoBehaviour
 
         }
 
-        //если персонаж стоит на месте (!hc.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
+        //если персонаж стоит на месте (!stats.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
         //то игрок находится СПРАВА от камеры (в слепой зоне), следовательно будет выполняться сл.блок.
-        if (!hc.isMoving && transform.position.x > body.position.x)
+        if (!stats.isMoving && transform.position.x > body.position.x)
         {
 
             //delta – расстояние между персонажем и камерой. Делим на camSpeed, чтоб разизовать "доезжание"
@@ -117,7 +117,7 @@ public class cameraScript : MonoBehaviour
 
 
         //если персонаж находится В БОЮ, то ему нужно изменить угол обзора камеры и установить ее выше, нежели чем ВНЕ БОЯ.
-        if (hc.onFight)
+        if (stats.onFight)
         {
 
             //установка новой позиции по Y
