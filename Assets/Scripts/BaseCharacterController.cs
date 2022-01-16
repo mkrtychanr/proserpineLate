@@ -181,14 +181,5 @@ public class BaseCharacterController : MonoBehaviour
             Debug.Log("Выстрел");
         }
     }
-    //метод смены оружия
-    protected void SelectWeapon(int weapon)
-    {
-        if (weapon <= stats.weaponLevel)
-        {
-            stats.selectedWeapon = weapon;
-            Debug.Log("Weapon "+ weapon +" is selected");
-        }
-    }
 
 }
