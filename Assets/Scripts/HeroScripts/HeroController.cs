@@ -8,34 +8,59 @@ public class HeroController : BaseCharacterController
     private HeroSoundControl sound;
     [SerializeField] private PauseMenu pause;
 
-    //метод смены оружия
+    //метод смены оружия. На вход поступает переменная от 0 до 3. И в зависимости от уровня оружия происходит особая обработка аргумента
+    //в том случае, если уровень оружия равен 0, то и первое оружие в панели будет иметь номер 0
+    //в том случае, если уровень оружия равен 1, то первое оружие в панели имеет номер 0, а второе – 2
+    //в том случае, если уровень оружия равен 2, то первое оружие в пенели уже будет иметь номер 1, второе – 2
+    //дальше идет в обычном порядке, на третьем уровне орудия 1 и 2 будут иметь такой же номер, как и на втором, а третье орудие номер 3
+    //в четвером так-же. Такая необычная механика выходит из ГДД.
     protected void SelectWeapon(int weapon)
     {
-        if (stats.status["weaponLevel"] <= 1)
+
+        //если уровень оружия меньше 2
+        if (stats.status["weaponLevel"] < 2)
         {
+
+            //если аргумент равен нулю.
             if (weapon == 0)
             {
-                stats.status["selectedWeapon"] = weapon;
-                sound.changeAudioClip("weaponChange");
-                Debug.Log("Weapon "+ weapon +" is selected");
-            }
 
+                //установка вызванного оружия
+                stats.status["selectedWeapon"] = weapon;
+
+                //вызов звука
+                sound.changeAudioClip("weaponChange");
+
+            }
+            
+            //если аргумент равен единице и уровень равен единице
             if (weapon == 1 && stats.status["weaponLevel"] == 1)
             {
+                
+                //присваивание аргументу новое значение
                 weapon = 2;
+
+                //установка вызванного оружия
                 stats.status["selectedWeapon"] = weapon;
+
+                //вызов звука
                 sound.changeAudioClip("weaponChange");
-                Debug.Log("Weapon "+ weapon +" is selected");
+
             }
         }
         else
         {
+
+            //увеличиваем значение аргумента, так как после первого уровня оружия номер зажатой кнопки соответствует вызываемому оружию
             weapon++;
             if (stats.status["weaponLevel"] >= weapon)
             {
+
+                //установка вызванного оружия
                 stats.status["selectedWeapon"] = weapon;
+
+                //вызов звука
                 sound.changeAudioClip("weaponChange");
-                Debug.Log("Weapon "+ weapon +" is selected");
             }
         }
     }
