@@ -5,22 +5,27 @@ using UnityEngine;
 public class BaseCharacterController : MonoBehaviour
 {
 
-    //скорость передвижения вне боя
-    [SerializeField] protected float walkSpeed = 10f;
+    public Dictionary<string, float> parameters = new Dictionary<string, float>()
+    {
 
-    //скорость передвижения в бою
-    [SerializeField] protected float fightSpeed = 20f;
+        //скорость ходьбы
+        ["walkSpeed"] = 10f,
 
-    //скорость падения
-    [SerializeField] protected float fallSpeed = -5f;
+        //скорость бега
+        ["fightSpeed"] = 20f,
 
-    //скорость передвижения в прыжке
-    [SerializeField] protected float jumpXSpeed = 10f;
+        //скорость падения
+        ["fallSpeed"] = -5f,
 
-    //сила прыжка
-    [SerializeField] protected float jumpYSpeed = 6f;
+        //скорость движения в воздухе
+        ["jumpXSpeed"] = 10f,
 
-    [SerializeField] protected float doubleJumpYSpeed = 6f;
+        //сила прыжка
+        ["jumpYSpeed"] = 6f,
+
+        //сила двойного прыжка
+        ["doubleJumpYSpeed"] = 6f
+    };
 
     //объявление компонентов Unity 
     [SerializeField] public Animator anim;
@@ -62,15 +67,15 @@ public class BaseCharacterController : MonoBehaviour
     {
 
         //меняем статус булиевых переменных. т.к. мы переходим в движение. Необходимо для анимаций и внутренней обработки кода
-        stats.isMoving = true;
-        anim.SetBool("isMoving", stats.isMoving);
+        stats.flags["isMoving"] = true;
+        anim.SetBool("isMoving", stats.flags["isMoving"]);
 
         //если мы находимся в прыжке или падаем (земля из под ног ушла), то нам нужно изменить скорость передвижения
-        if (stats.inJump || stats.isFalling)
+        if (stats.flags["inJump"] || stats.flags["isFalling"])
         {
             
             //скорость по Х задаем сами выше
-            xVelocity = jumpXSpeed;
+            xVelocity = parameters["jumpXSpeed"];
 
             //а тут оставляем все на душе физики Unity
             yVelocity = rb.velocity.y;
@@ -80,14 +85,14 @@ public class BaseCharacterController : MonoBehaviour
         {
 
             //в зависимости от того в бою мы или нет – меняем скорость задаваемую при ходьбе
-            if (stats.onFight)
+            if (stats.flags["onFight"])
             {
-                xVelocity = fightSpeed;
+                xVelocity = parameters["fightSpeed"];
                 yVelocity = -12f;
             }
             else
             {
-                xVelocity = walkSpeed;
+                xVelocity = parameters["walkSpeed"];
                 yVelocity = -5f;
             }
 
@@ -101,33 +106,33 @@ public class BaseCharacterController : MonoBehaviour
 
     protected void onFallCheck()
     {
-        if (stats.inJump && rb.velocity.y < 0) stats.isFalling = true;
-        anim.SetBool("isFalling", stats.isFalling);
+        if (stats.flags["inJump"] && rb.velocity.y < 0) stats.flags["isFalling"] = true;
+        anim.SetBool("isFalling", stats.flags["isFalling"]);
     }
 
     protected void Up()
     {
-        if (!stats.inJump)
+        if (!stats.flags["inJump"])
         {
             Debug.Log("JustUp");
-            stats.inJump = true;
-            anim.SetBool("inJump", stats.inJump);
-            rb.velocity = new Vector2(rb.velocity.x, jumpYSpeed);
+            stats.flags["inJump"] = true;
+            anim.SetBool("inJump", stats.flags["inJump"]);
+            rb.velocity = new Vector2(rb.velocity.x, parameters["jumpYSpeed"]);
         }
     }
     //метод двойного прыжка
     protected void DoubleJump()
     {   
         //если персонаж находится в прыжке
-        if (stats.inJump && !stats.inDoubleJump)
+        if (stats.flags["inJump"] && !stats.flags["inDoubleJump"])
         {
             Debug.Log("JustDoubleJump");
-            stats.inDoubleJump = true;
-            stats.isFalling = false;
-            anim.SetBool("isFalling", stats.isFalling);
-            anim.SetBool("inDoubleJump", stats.inDoubleJump);
+            stats.flags["inDoubleJump"] = true;
+            stats.flags["isFalling"] = false;
+            anim.SetBool("isFalling", stats.flags["isFalling"]);
+            anim.SetBool("inDoubleJump", stats.flags["inDoubleJump"]);
 
-            rb.velocity = new Vector2(rb.velocity.x, doubleJumpYSpeed);
+            rb.velocity = new Vector2(rb.velocity.x, parameters["doubleJumpYSpeed"]);
         }
     }
 
@@ -135,9 +140,9 @@ public class BaseCharacterController : MonoBehaviour
     protected void StopMoving()
     {
          //меняем статус булиевых переменных. т.к. мы перестаем двигаться. Необходимо для анимаций и внутренней обработки кода
-        stats.isMoving = false;
-        anim.SetBool("isMoving", stats.isMoving);
-        if (stats.inJump)
+        stats.flags["isMoving"] = false;
+        anim.SetBool("isMoving", stats.flags["isMoving"]);
+        if (stats.flags["inJump"])
         {
             xVelocity = 0;
             yVelocity = rb.velocity.y;    
@@ -154,8 +159,8 @@ public class BaseCharacterController : MonoBehaviour
     protected void SetToFight()
     {
         //меняем статус булиевых переменных и вызываем триггер. Необходимо для анимаций и внутренней обработки кода
-        stats.onFight = true;
-        anim.SetBool("onFight", stats.onFight);
+        stats.flags["onFight"] = true;
+        anim.SetBool("onFight", stats.flags["onFight"]);
         anim.SetTrigger("onFightTrigger");
     }
 
@@ -163,8 +168,8 @@ public class BaseCharacterController : MonoBehaviour
     protected void SetToWalk()
     {
         //меняем статус булиевых переменных и вызываем триггер. Необходимо для анимаций и внутренней обработки кода
-        stats.onFight = false;
-        anim.SetBool("onFight", stats.onFight);
+        stats.flags["onFight"] = false;
+        anim.SetBool("onFight", stats.flags["onFight"]);
         anim.SetTrigger("onFightTrigger");
     }
 
@@ -176,7 +181,7 @@ public class BaseCharacterController : MonoBehaviour
     //метод стрельбы
     protected void Shoot()
     {
-        if (stats.onFight)
+        if (stats.flags["onFight"])
         {
             Debug.Log("Выстрел");
         }

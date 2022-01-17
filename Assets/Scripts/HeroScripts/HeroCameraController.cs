@@ -85,9 +85,9 @@ public class HeroCameraController : MonoBehaviour
         //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        //если персонаж стоит на месте (!stats.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
+        //если персонаж стоит на месте (!stats.flags["isMoving"]) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
         //то игрок находится СПРАВА от камеры (в слепой зоне), следовательно будет выполняться сл.блок.
-        if (!stats.isMoving && transform.position.x < body.position.x)
+        if (!stats.flags["isMoving"] && transform.position.x < body.position.x)
         {
 
             //delta – расстояние между персонажем и камерой. Делим на camSpeed, чтоб разизовать "доезжание"
@@ -96,9 +96,9 @@ public class HeroCameraController : MonoBehaviour
 
         }
 
-        //если персонаж стоит на месте (!stats.isMoving) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
+        //если персонаж стоит на месте (!stats.flags["isMoving"]) и положение камеры (transform.position) МЕНЬШЕ положения игрока,
         //то игрок находится СПРАВА от камеры (в слепой зоне), следовательно будет выполняться сл.блок.
-        if (!stats.isMoving && transform.position.x > body.position.x)
+        if (!stats.flags["isMoving"] && transform.position.x > body.position.x)
         {
 
             //delta – расстояние между персонажем и камерой. Делим на camSpeed, чтоб разизовать "доезжание"
@@ -117,7 +117,7 @@ public class HeroCameraController : MonoBehaviour
 
 
         //если персонаж находится В БОЮ, то ему нужно изменить угол обзора камеры и установить ее выше, нежели чем ВНЕ БОЯ.
-        if (stats.onFight)
+        if (stats.flags["onFight"])
         {
 
             //установка новой позиции по Y
@@ -127,7 +127,7 @@ public class HeroCameraController : MonoBehaviour
             //cam.fieldOfView = fightFieldOfView;
 
         } 
-        //если персонаж находится ВНЕ БОЮ, то ему нужно изменить угол обзора камеры и установить ее выше, нежели чем В БОЯ.
+        //если персонаж находится ВНЕ БОЯ, то ему нужно изменить угол обзора камеры и установить ее выше, нежели чем В БОЯ.
         else 
         {
 

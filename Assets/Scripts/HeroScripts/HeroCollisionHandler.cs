@@ -30,29 +30,29 @@ public class HeroCollisionHandler : MonoBehaviour
         {
 
             //персонаж перестал падать
-            stats.isFalling = false;
+            stats.flags["isFalling"] = false;
 
             //персонаж не в прыжке больше
-            stats.inJump = false;
+            stats.flags["inJump"] = false;
 
             //персонаж не в двойном прыжке
-            stats.inDoubleJump = false;
+            stats.flags["inDoubleJump"] = false;
 
             //передаем новые сосотояния в аниматор персонажа
-            hero.anim.SetBool("isFalling", stats.isFalling);
-            hero.anim.SetBool("inJump", stats.inJump);
-            hero.anim.SetBool("inDoubleJump", stats.inDoubleJump);
+            hero.anim.SetBool("isFalling", stats.flags["isFalling"]);
+            hero.anim.SetBool("inJump", stats.flags["inJump"]);
+            hero.anim.SetBool("inDoubleJump", stats.flags["inDoubleJump"]);
 
         }
 
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "FallZone" && stats.inJump == false)
+        if (collider.gameObject.tag == "FallZone" && stats.flags["inJump"] == false)
         {
             Debug.Log("FallZone");
-            stats.isFalling = true;
-            hero.anim.SetBool("isFalling", stats.isFalling);
+            stats.flags["isFalling"] = true;
+            hero.anim.SetBool("isFalling", stats.flags["isFalling"]);
         }    
     }
 }
