@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour
     private GameObject controllerFields;
     private BaseUIStatus[] status = new BaseUIStatus[4];
     private BaseUIController[] controller = new BaseUIController[6];
-    
+
     //метод вызываемый при паузе
     private void Pause()
     {
@@ -59,7 +59,7 @@ public class PauseMenu : MonoBehaviour
 
     }
 
-    private void setToDefault()
+    public void setToDefault()
     {
         
         for (int i = 0; i < status.Length; i++)
@@ -75,13 +75,28 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    public void apply()
+    {
+        for (int i = 0; i < status.Length; i++)
+        {
+            status[i].setToGame();
+
+        }
+
+        for (int i = 0; i < controller.Length; i++)
+        {
+            controller[i].setToGame();
+
+        }
+    }
+
     void Start()
     {
         //выключение объекта с интерфейсом паузы(на всякий случай)
-        pause.SetActive(true);
+        pause.SetActive(false);
 
         //снятие с паузы (на всякий случай)
-        isPaused = true;
+        isPaused = false;
 
     }
 
@@ -90,6 +105,9 @@ public class PauseMenu : MonoBehaviour
         init();
     }
 
+    /// <summary>
+    /// Что-то тут есть
+    /// </summary>
     void init()
     {
         statusFields = GameObject.Find("StatusFields");

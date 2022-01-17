@@ -32,6 +32,7 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected GameObject objSprite;
     [SerializeField] protected SpriteRenderer sprite;
+    [SerializeField] protected Transform tr;
     protected BaseCharacterStatus stats;
 
     //скорость при передвижении по Х
@@ -39,6 +40,20 @@ public class BaseCharacterController : MonoBehaviour
 
     //скорость при передвижении по Y
     private float yVelocity;
+
+    public void Restart()
+    {
+        stats.flags["isMoving"] = false;
+        stats.flags["onFight"] = false;
+        stats.flags["inJump"] = false;
+        stats.flags["inDoubleJump"] = false;
+        stats.flags["xDash"] = false;
+        stats.flags["yDash"] = false;
+        stats.flags["isFalling"] = false;
+        anim.SetTrigger("Restart");
+        transform.position = new Vector3(0, 0, 0);
+        rb.velocity = new Vector2(0, 0);
+    }
 
     //метод поворота персонажа
     protected void Turn()

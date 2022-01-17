@@ -27,12 +27,12 @@ public class BaseUIStatus : MonoBehaviour
     public void setAsDefault()
     {
         current = inDefault;
-        Debug.Log("Default is" + inDefault);
         panel.text = current.ToString();
+        stats.status[field] = current;
     }
 
     //передача значений в объект с состояниями
-    void setToGame()
+    public void setToGame()
     {
 
         //при неудачной попытке TryParse в current запишется ноль. На такой случай хранится состояние переменной current до TryParse
