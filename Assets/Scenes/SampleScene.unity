@@ -155,20 +155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a6dcfd125f444a48b4702096a4ae55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pause: {fileID: 62269144}
   isPaused: 0
-  status:
-  - {fileID: 670330932}
-  - {fileID: 169105683}
-  - {fileID: 371391351}
-  - {fileID: 795077583}
-  controller:
-  - {fileID: 1218148774}
-  - {fileID: 1017856427}
-  - {fileID: 1711443074}
-  - {fileID: 1056871068}
-  - {fileID: 290886502}
-  - {fileID: 1853666796}
+  pause: {fileID: 62269144}
 --- !u!114 &62269146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,6 +1164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400482212}
+  - component: {fileID: 400482213}
   m_Layer: 6
   m_Name: StatusFields
   m_TagString: Untagged
@@ -1206,6 +1195,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &400482213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400482211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37e51e2499f1a40a99ecb97794ce8bf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &495224034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4127,10 +4128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a6dcfd125f444a48b4702096a4ae55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pause: {fileID: 62269144}
   isPaused: 0
-  status: []
-  controller: []
+  pause: {fileID: 62269144}
 --- !u!1 &1588155792
 GameObject:
   m_ObjectHideFlags: 0

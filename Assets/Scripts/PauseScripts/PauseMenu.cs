@@ -10,8 +10,11 @@ public class PauseMenu : MonoBehaviour
 
     //объявление компонентов Unity
     [SerializeField] private GameObject pause;
-    [SerializeField] private BaseUIStatus[] status;
-    [SerializeField] private BaseUIController[] controller;
+
+    private GameObject statusFields;
+    private GameObject controllerFields;
+    private BaseUIStatus[] status = new BaseUIStatus[4];
+    private BaseUIController[] controller = new BaseUIController[6];
     
     //метод вызываемый при паузе
     private void Pause()
@@ -58,9 +61,9 @@ public class PauseMenu : MonoBehaviour
 
     private void setToDefault()
     {
+        
         for (int i = 0; i < status.Length; i++)
         {
-            Debug.Log(i + "is clr");
             status[i].setAsDefault();
 
         }
@@ -74,12 +77,35 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-
         //выключение объекта с интерфейсом паузы(на всякий случай)
-        pause.SetActive(false);
+        pause.SetActive(true);
 
         //снятие с паузы (на всякий случай)
-        isPaused = false;
+        isPaused = true;
+
+    }
+
+    void Awake()
+    {
+        init();
+    }
+
+    void init()
+    {
+        statusFields = GameObject.Find("StatusFields");
+        controllerFields = GameObject.Find("ControllerFields");
+
+        status[0] = statusFields.transform.GetChild(0).GetComponent<HealthMaxUIStatus>();
+        status[1] = statusFields.transform.GetChild(1).GetComponent<HealthUIStatus>();
+        status[2] = statusFields.transform.GetChild(2).GetComponent<WeaponLevelUIStatus>();
+        status[3] = statusFields.transform.GetChild(3).GetComponent<SelectedWeaponUIStatus>();
+
+        controller[0] = controllerFields.transform.GetChild(0).GetComponent<WalkSpeedUIController>();
+        controller[1] = controllerFields.transform.GetChild(1).GetComponent<FightSpeedUIController>();
+        controller[2] = controllerFields.transform.GetChild(2).GetComponent<FallSpeedUIController>();
+        controller[3] = controllerFields.transform.GetChild(3).GetComponent<JumpXSpeedUIController>();
+        controller[4] = controllerFields.transform.GetChild(4).GetComponent<JumpYSpeedUIController>();
+        controller[5] = controllerFields.transform.GetChild(5).GetComponent<DoubleJumpYSpeedUIController>();
 
     }
 
@@ -89,7 +115,6 @@ public class PauseMenu : MonoBehaviour
         //если нажата кнопка паузы
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-
             if (isPaused)
             {
 
@@ -109,7 +134,6 @@ public class PauseMenu : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D) && isPaused)
         {
-            Debug.Log("Set to default");
             setToDefault();
         }
 

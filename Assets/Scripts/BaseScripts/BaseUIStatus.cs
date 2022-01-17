@@ -7,7 +7,7 @@ public class BaseUIStatus : MonoBehaviour
 {
 
     //объявление компонентов Unity
-    [SerializeField] protected InputField panel;
+    [SerializeField] public InputField panel;
     [SerializeField] protected BaseCharacterStatus stats;
     
 
