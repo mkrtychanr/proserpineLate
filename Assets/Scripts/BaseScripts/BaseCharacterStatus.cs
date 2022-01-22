@@ -18,7 +18,11 @@ public class BaseCharacterStatus : MonoBehaviour
         ["weaponLevel"] = 0,
 
         //выбранное оружие
-        ["selectedWeapon"] = 0
+        ["selectedWeapon"] = 0,
+
+        ["direction"] = 1,
+
+        ["wallCollusionDirection"] = 0
 
     };
 
@@ -44,7 +48,10 @@ public class BaseCharacterStatus : MonoBehaviour
         ["yDash"] = false,
 
         //находимся ли персонаж в состоянии падения
-        ["isFalling"] = false
+        ["isFalling"] = false,
+
+        //находится ли персонаж в состоянии коллизии со стеной
+        ["wall"] = false
 
     };
 

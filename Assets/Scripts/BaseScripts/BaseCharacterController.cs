@@ -29,7 +29,7 @@ public class BaseCharacterController : MonoBehaviour
 
     //объявление компонентов Unity 
     [SerializeField] public Animator anim;
-    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] public Rigidbody2D rb;
     [SerializeField] protected GameObject objSprite;
     [SerializeField] protected SpriteRenderer sprite;
     [SerializeField] protected Transform tr;
@@ -65,6 +65,7 @@ public class BaseCharacterController : MonoBehaviour
 
             //разворот спрайта
             sprite.flipX = false;
+            stats.status["direction"] = 1;
 
         }
 
@@ -73,6 +74,7 @@ public class BaseCharacterController : MonoBehaviour
         {
             //разворот спрайта
             sprite.flipX = true;
+            stats.status["direction"] = -1;
         }
 
     }
@@ -80,43 +82,50 @@ public class BaseCharacterController : MonoBehaviour
     //метод передвижения персонажа по X. в качестве применяемого параметра – направление. 1 – вправо. (-1) – влево
     protected void Move(int direction)
     {
-
-        //меняем статус булиевых переменных. т.к. мы переходим в движение. Необходимо для анимаций и внутренней обработки кода
-        stats.flags["isMoving"] = true;
-        anim.SetBool("isMoving", stats.flags["isMoving"]);
-
-        //если мы находимся в прыжке или падаем (земля из под ног ушла), то нам нужно изменить скорость передвижения
-        if (stats.flags["inJump"] || stats.flags["isFalling"])
-        {
-            
-            //скорость по Х задаем сами выше
-            xVelocity = parameters["jumpXSpeed"];
-
-            //а тут оставляем все на душе физики Unity
-            yVelocity = rb.velocity.y;
-
-        }
-        else
+        if (direction != stats.status["wallCollusionDirection"])
         {
 
-            //в зависимости от того в бою мы или нет – меняем скорость задаваемую при ходьбе
-            if (stats.flags["onFight"])
+            //меняем статус булиевых переменных. т.к. мы переходим в движение. Необходимо для анимаций и внутренней обработки кода
+            stats.flags["isMoving"] = true;
+            anim.SetBool("isMoving", stats.flags["isMoving"]);
+
+            //если мы находимся в прыжке или падаем (земля из под ног ушла), то нам нужно изменить скорость передвижения
+            if (stats.flags["inJump"] || stats.flags["isFalling"])
             {
-                xVelocity = parameters["fightSpeed"];
-                yVelocity = -12f;
+                
+                //скорость по Х задаем сами выше
+                xVelocity = parameters["jumpXSpeed"];
+
+                //а тут оставляем все на душе физики Unity
+                yVelocity = rb.velocity.y;
+
             }
             else
             {
-                xVelocity = parameters["walkSpeed"];
-                yVelocity = -5f;
+
+                //в зависимости от того в бою мы или нет – меняем скорость задаваемую при ходьбе
+                if (stats.flags["onFight"])
+                {
+                    xVelocity = parameters["fightSpeed"];
+                    yVelocity = -12f;
+                }
+                else
+                {
+                    xVelocity = parameters["walkSpeed"];
+                    yVelocity = -5f;
+                }
+
             }
 
+            //передаем новые состояния скорости персонажу
+            rb.velocity = new Vector2(xVelocity * direction, yVelocity);
+            //производим поворот спрайта
+            Turn();
         }
-
-        //передаем новые состояния скорости персонажу
-        rb.velocity = new Vector2(xVelocity * direction, yVelocity);
-        //производим поворот спрайта
-        Turn();
+        else
+        {
+            Debug.Log("Уперся в стену");
+        }
     }
 
     protected void onFallCheck()

@@ -10,6 +10,7 @@ TagManager:
   - Weapon1
   - Weapon2
   - Weapon3
+  - Wall
   layers:
   - Default
   - TransparentFX

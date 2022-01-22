@@ -17,7 +17,6 @@ public class HeroWeaponController : MonoBehaviour
     //смена выбранного оружия
     private void changeWeapon()
     {
-
         //отключение игрового объекта с активным до этого оружия
         weapons[actualWeapon].SetActive(false);
 
@@ -36,11 +35,13 @@ public class HeroWeaponController : MonoBehaviour
 
     void Update()
     {
+
         //если оружие было смененно в контроллере
         if (stats.status["selectedWeapon"] != actualWeapon)
         {
             changeWeapon();
         }
+
     }
 
 }

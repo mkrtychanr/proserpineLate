@@ -5,9 +5,10 @@ using UnityEngine;
 public class HeroController : BaseCharacterController
 {
 
-    private HeroSoundControl sound;
-    [SerializeField] private PauseMenu pause;
+    protected HeroSoundControl sound;
+    [SerializeField] protected PauseMenu pause;
 
+    
     //метод смены оружия. На вход поступает переменная от 0 до 3. И в зависимости от уровня оружия происходит особая обработка аргумента
     //в том случае, если уровень оружия равен 0, то и первое оружие в панели будет иметь номер 0
     //в том случае, если уровень оружия равен 1, то первое оружие в панели имеет номер 0, а второе – 2
@@ -65,6 +66,7 @@ public class HeroController : BaseCharacterController
         }
     }
 
+    
     //метод увеличения уровня оружия
     protected void weaponLevelUp()
     {
@@ -74,7 +76,7 @@ public class HeroController : BaseCharacterController
         //проверка случая когда выбранное орудие теперь недоступно (2 уровень оружия, пропадает нулевое орудие и вместо него появляется первое).
         weaponLevelCheck();
     }
-
+    
     //проверка на невозможность управления оружием с текущим уровнем
     protected void weaponLevelCheck()
     {
@@ -119,7 +121,7 @@ public class HeroController : BaseCharacterController
             onFallCheck();
 
             //проверка на возможность ношения выбранного оружия
-            weaponLevelCheck();
+            //weaponLevelCheck();
 
             //двойной прыжок. Персонаж должен быть в воздухе(должен быть уже один прыжок) и должна быть зажата клавиша W
             if (Input.GetKeyDown(KeyCode.W) && stats.flags["inJump"])
@@ -144,14 +146,15 @@ public class HeroController : BaseCharacterController
                 //придача ускорения
                 Move(1);
 
-                //если персонаж находится в воздухе, то необходимо запускается соотвествующий звук
+                //если персонаж находится в воздухе, то необходимо запускается соотвествующий звук.
                 if (stats.flags["inJump"] || stats.flags["isFalling"])
                 {
                     sound.changeAudioClip("moveInAir");
 
                 } 
 
-                else
+                //если персонаж не в воздухе и не усперся в стену
+                else if (stats.status["wallCollusionDirection"] == 0)
                 {
 
                     //если игрок находится в режиме боя, то запускается звук бега
@@ -218,6 +221,11 @@ public class HeroController : BaseCharacterController
 
             }
 
+            if (stats.status["wallCollusionDirection"] != 0)
+            {
+                sound.changeAudioClip("stopMoving");
+            }
+
             //включение режима боя
             if (Input.GetKeyDown(KeyCode.F))
             {
@@ -234,7 +242,7 @@ public class HeroController : BaseCharacterController
 
             }
 
-
+            
             //выбор первого оружия
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -262,6 +270,7 @@ public class HeroController : BaseCharacterController
                 SelectWeapon(3);
 
             }
+            
         }
     }
 }

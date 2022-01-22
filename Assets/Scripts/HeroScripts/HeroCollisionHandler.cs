@@ -29,6 +29,7 @@ public class HeroCollisionHandler : MonoBehaviour
         if (collision.gameObject.tag == "Floor")
         {
 
+
             //персонаж перестал падать
             stats.flags["isFalling"] = false;
 
@@ -45,6 +46,12 @@ public class HeroCollisionHandler : MonoBehaviour
 
         }
 
+        if (collision.gameObject.tag == "Wall")
+        {
+            Debug.Log($"Регестрирую вход {stats.status["direction"]}");
+            stats.status["wallCollusionDirection"] = stats.status["direction"];
+        }
+
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -54,5 +61,16 @@ public class HeroCollisionHandler : MonoBehaviour
             stats.flags["isFalling"] = true;
             hero.anim.SetBool("isFalling", stats.flags["isFalling"]);
         }    
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+
+         if (collision.gameObject.tag == "Wall")
+            {
+                Debug.Log($"Регестрирую выход {stats.status["wallCollusionDirection"]}");
+                stats.status["wallCollusionDirection"] = 0;
+            }
+        
     }
 }
